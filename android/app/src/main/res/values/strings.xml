@@ -1,4 +1,4 @@
 <resources>
     <string name="app_name">eco_route</string>
-    <string name="google_maps_api_key">AIzaSyDBoD5RT0yVT0y2_hjD9a1eypnXQjV1d9Y</string>
+    <string name="google_maps_api_key">""</string>
 </resources>
