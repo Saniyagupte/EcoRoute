@@ -1,16 +1,49 @@
-# eco_route
+# ⚡ EcoRoute – Smart EV Route Planner
 
-A new Flutter project.
+EcoRoute is an intelligent electric vehicle (EV) journey planner designed for in-car tablet interfaces. It helps EV drivers optimize long-distance travel by accounting for battery levels, car model efficiency, and strategically located charging stations. With real-time mapping and EV-specific logic, EcoRoute ensures you never run out of charge mid-trip.
 
-## Getting Started
+---
 
-This project is a starting point for a Flutter application.
+## 🌟 Features
 
-A few resources to get you started if this is your first Flutter project:
+- 🚘 **EV-Aware Routing**
+  - Plan routes based on your specific car model and driving speed.
+  - Factor in real-world battery consumption profiles.
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+- 🔋 **Battery Percentage Input**
+  - Start with current battery % to accurately estimate range.
+  - Visualize consumption over journey duration.
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+- 🔌 **Smart Charging Stops**
+  - Automatically places charging stations at optimal points.
+  - Avoids range anxiety with predictive routing and safe margins.
+
+- 🗺️ **Map Integration**
+  - Google Maps integration with current location, route, and markers.
+  - Select start and end points via autocomplete.
+
+- 🖥️ **Tablet-First Flutter UI**
+  - Clean, in-dash look with large touch targets.
+  - Rounded UI components and dark mode aesthetic.
+
+---
+
+## 🖼️ Screenshots
+
+### 🏠 Home Screen – Car Model & Battery Input
+
+![Home Screen](./images/home_screen.png)
+
+---
+
+### 📍 Journey Planner – Route Input + Map View
+
+![Journey Planner](./images/journey_planner.png)
+
+---
+
+## 🚧 Under Development
+Future phases include:
+- Charging station filtering by plug type
+- Real-time charging availability
+- Backend route segmentation and optimization
