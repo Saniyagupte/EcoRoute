@@ -30,19 +30,19 @@ EcoRoute is an intelligent electric vehicle (EV) journey planner designed for in
 
 ## 🖼️ Screenshots
 
-### 🏠 Home Screen – Car Model & Battery Input
+### Home Screen – Car Model & Battery Input
 
-![Home Screen]
-![image](https://github.com/user-attachments/assets/807b28c4-458e-46a8-8197-e96a2f3a076f)
-
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/807b28c4-458e-46a8-8197-e96a2f3a076f" alt="Home Screen" width="600"/>
+</p>
 
 ---
 
-### 📍 Journey Planner – Route Input + Map View
+### Journey Planner – Route Input + Map View
 
-![Journey Planner]
-![image](https://github.com/user-attachments/assets/1486a5dd-dc17-431c-bafd-feab707f401e)
-
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/1486a5dd-dc17-431c-bafd-feab707f401e" alt="Journey Planner Screen" width="600"/>
+</p>
 
 ---
 
