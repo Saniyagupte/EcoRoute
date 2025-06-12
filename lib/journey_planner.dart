@@ -2,18 +2,23 @@ import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:google_place/google_place.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:eco_route/calculate_backend.dart';
+
 
 class JourneyPlannerGoogle extends StatefulWidget {
   final String carModel;
   final double batteryPercent;
+  final double avgSpeed;
 
   JourneyPlannerGoogle({
     required this.carModel,
     required this.batteryPercent,
+    required this.avgSpeed,
   });
 
   @override
   _JourneyPlannerGoogleState createState() => _JourneyPlannerGoogleState();
+
 }
 
 class _JourneyPlannerGoogleState extends State<JourneyPlannerGoogle> {
@@ -24,6 +29,11 @@ class _JourneyPlannerGoogleState extends State<JourneyPlannerGoogle> {
   late GooglePlace googlePlace;
   List<AutocompletePrediction> startPredictions = [];
   List<AutocompletePrediction> endPredictions = [];
+  List<SearchResult> _chargingStations = [];
+  bool _stationsFetched = false;
+  Set<Polyline> _polylines = {};
+
+
 
   LatLng? startLatLng;
   LatLng? endLatLng;
@@ -212,23 +222,26 @@ class _JourneyPlannerGoogleState extends State<JourneyPlannerGoogle> {
 
   // Helper to calculate bounds for two or more LatLng points
   LatLngBounds _boundsFromLatLngList(List<LatLng> list) {
-    double? x0, x1, y0, y1;
+    assert(list.isNotEmpty);
+
+    double south = list.first.latitude;
+    double north = list.first.latitude;
+    double west = list.first.longitude;
+    double east = list.first.longitude;
+
     for (LatLng latLng in list) {
-      if (x0 == null) {
-        x0 = x1 = latLng.latitude;
-        y0 = y1 = latLng.longitude;
-      } else {
-        if (latLng.latitude < x0) x0 = latLng.latitude;
-        if (latLng.latitude > x1!) x1 = latLng.latitude!; // FIX
-        if (latLng.longitude < y0!) y0 = latLng.longitude!; // FIX
-        if (latLng.longitude > y1!) y1 = latLng.longitude!; // FIX
-      }
+      if (latLng.latitude < south) south = latLng.latitude;
+      if (latLng.latitude > north) north = latLng.latitude;
+      if (latLng.longitude < west) west = latLng.longitude;
+      if (latLng.longitude > east) east = latLng.longitude;
     }
+
     return LatLngBounds(
-      northeast: LatLng(x1!, y1!),
-      southwest: LatLng(x0!, y0!),
+      southwest: LatLng(south, west),
+      northeast: LatLng(north, east),
     );
   }
+
 
 
   Widget _buildInputField(TextEditingController controller,
@@ -380,6 +393,7 @@ class _JourneyPlannerGoogleState extends State<JourneyPlannerGoogle> {
               ),
               myLocationEnabled: true,
               markers: _markers, // Use the _markers set
+              polylines: _polylines,
             ),
             Positioned(
               top: 40,
@@ -416,26 +430,62 @@ class _JourneyPlannerGoogleState extends State<JourneyPlannerGoogle> {
                       style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                     ),
                     const SizedBox(height: 12),
-                    ElevatedButton(
-                      onPressed: () {
-                        if (startLatLng == null || endLatLng == null) {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                              content:
-                              Text('Please select both start and destination locations'),
-                            ),
-                          );
-                          return;
-                        }
-                        print("Continue button pressed");
-                        print("Start Coordinates: ${startLatLng?.latitude}, ${startLatLng?.longitude}");
-                        print("End Coordinates: ${endLatLng?.latitude}, ${endLatLng?.longitude}");
-                        // TODO: Now you have startLatLng and endLatLng, you can use them to:
-                        // 1. Calculate a route (e.g., using Google Directions API)
-                        // 2. Pass them to the next screen
-                      },
-                      child: const Text("Continue"),
-                    ),
+                ElevatedButton(
+                    onPressed: () async {
+                      if (startLatLng == null || endLatLng == null) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(content: Text('Please select both start and destination locations')),
+                        );
+                        return;
+                      }
+
+                      print("Calculating optimized route...");
+                      final backend = CalculateBackend(
+                        carModel: widget.carModel,
+                        batteryPercent: widget.batteryPercent,
+                        avgSpeed: widget.avgSpeed,
+                        startPosition: startLatLng!,
+                        endPosition: endLatLng!,
+                      );
+
+                      final result = await backend.showRoute(googlePlace);
+                      print("Optimized route contains ${result.routePoints.length} waypoints");
+
+                      // ✅ Create green polyline for full route
+                      final polyline = Polyline(
+                        polylineId: PolylineId("optimized_route"),
+                        points: result.routePoints,
+                        color: Colors.green,
+                        width: 6,
+                      );
+
+                      // ✅ Create blue markers for charging stations
+                      final stationMarkers = result.chargingStations.map((stationLatLng) {
+                        return Marker(
+                          markerId: MarkerId("station_${stationLatLng.latitude}_${stationLatLng.longitude}"),
+                          position: stationLatLng,
+                          icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueBlue),
+                        );
+                      }).toSet();
+
+                      setState(() {
+                        _polylines.clear();
+                        _markers.clear();
+                        _polylines.add(polyline);
+                        _markers.addAll(stationMarkers);
+                      });
+
+                      // Optionally zoom to route
+                      final bounds = _boundsFromLatLngList(result.routePoints);
+                      mapController?.animateCamera(CameraUpdate.newLatLngBounds(bounds, 100));
+                    },
+
+
+
+
+                    child: Text(_stationsFetched ? "Show Optimized Route" : "Continue"),
+                ),
+
                   ],
                 ),
               ),
