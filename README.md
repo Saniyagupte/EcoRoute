@@ -28,7 +28,7 @@ EcoRoute is an intelligent electric vehicle (EV) journey planner designed for in
 
 ---
 
-##  Under the Hood
+##  How It Works
 
 EcoRoute uses a combination of graph algorithms, real-time APIs, and EV-specific range logic to compute efficient routes.
 
