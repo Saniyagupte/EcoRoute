@@ -4,27 +4,27 @@ EcoRoute is an intelligent electric vehicle (EV) journey planner designed for in
 
 ---
 
-## Features
+##  Features
 
--  **EV-Aware Routing**
-  - Plan routes based on your specific car model and driving speed.
-  - Factor in real-world battery consumption profiles.
+- **EV-Aware Routing**  
+  Plan routes based on your specific car model and driving speed.  
+  Factor in real-world battery consumption profiles.
 
--  **Battery Percentage Input**
-  - Start with current battery % to accurately estimate range.
-  - Visualize consumption over journey duration.
+- **Battery Percentage Input**  
+  Start with current battery % to accurately estimate range.  
+  Visualize consumption over journey duration.
 
--  **Smart Charging Stops**
-  - Automatically places charging stations at optimal points.
-  - Avoids range anxiety with predictive routing and safe margins.
+- **Smart Charging Stops**  
+  Automatically places charging stations at optimal points.  
+  Avoids range anxiety with predictive routing and safe margins.
 
--  **Map Integration**
-  - Google Maps integration with current location, route, and markers.
-  - Select start and end points via autocomplete.
+- **Map Integration**  
+  Google Maps integration with current location, route, and markers.  
+  Select start and end points via autocomplete.
 
--  **Tablet-First Flutter UI**
-  - Clean, in-dash look with large touch targets.
-  - Rounded UI components and dark mode aesthetic.
+- **Tablet-First Flutter UI**  
+  Clean, in-dash look with large touch targets.  
+  Rounded UI components and dark mode aesthetic.
 
 ---
 
