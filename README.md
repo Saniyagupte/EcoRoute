@@ -28,26 +28,43 @@ EcoRoute is an intelligent electric vehicle (EV) journey planner designed for in
 
 ---
 
-## 🖼️ Screenshots
+## 🧠 Under the Hood
 
-### Home Screen – Car Model & Battery Input
+EcoRoute uses a combination of graph algorithms, real-time APIs, and EV-specific range logic to compute efficient routes.
 
-<p align="center">
-  <img src="https://github.com/user-attachments/assets/807b28c4-458e-46a8-8197-e96a2f3a076f" alt="Home Screen" width="600"/>
-</p>
+### 📍 Graph-Based Modeling
+
+- Routes are modeled as a **dynamic graph**, where:
+  - Nodes = Start, End, and intermediate **charging stations** (fetched using Google Places API)
+  - Edges = **Weighted road distances** between reachable pairs (retrieved via Google Directions API)
+
+### 🔋 Greedy Charging Strategy
+
+- The app calculates **available driving range** from the input battery % using:
+- A **greedy heuristic** selects the **nearest reachable charging station** that also minimizes distance to destination.
+
+### 🧮 Dijkstra’s Algorithm
+
+- Once the list of waypoints (start → stations → end) is finalized:
+- A weighted graph is built from these nodes.
+- **Dijkstra's algorithm** is applied to compute the shortest total path.
+- Ensures optimality in road distance, not just feasibility.
+
+### 🧭 Polyline Rendering
+
+- For every segment (start → station, station → station, station → end), the app:
+- Fetches real-time turn-by-turn directions via Google Directions API.
+- Decodes the **overview polyline** and renders it using Google Maps Flutter SDK.
 
 ---
 
-### Journey Planner – Route Input + Map View
+## 🛠️ Tech Stack
 
-<p align="center">
-  <img src="https://github.com/user-attachments/assets/1486a5dd-dc17-431c-bafd-feab707f401e" alt="Journey Planner Screen" width="600"/>
-</p>
+- **Flutter** – cross-platform mobile development
+- **Google Maps SDK** – map rendering and interaction
+- **Google Places API** – fetch nearby EV charging stations
+- **Google Directions API** – compute road distances and polylines
+- **Custom Graph Structures** – `GraphNode`, `GraphEdge`, and `DijkstraPathfinder` classes for route planning
+- **EV Battery Model** – per-model consumption rates and capacity for realistic range estimation
 
 ---
-
-## 🚧 Under Development
-Future phases include:
-- Charging station filtering by plug type
-- Real-time charging availability
-- Backend route segmentation and optimization
